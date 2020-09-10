@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<body class="landing is-preload">
+     @*Page Wrapper*@ 
+    <div id="page-wrapper">
+         @*Banner*@ 
+        <section id="banner">
+            <div class="inner">
+                <h2>Aloha Table</h2>
+                <p>
+                    Enjoy our authentic<br />
+                    Hawaiian foods and seafoods<br />
+                    ●●●
+                </p>
+
+                <ul class="actions special">
+                    <input type="button" class="button primary" value="ORDER ONLINE" onclick="@("window.location.href='" + @Url.Action("Index", "Shopping") + "'");" />
+                </ul>
+            </div>
+            <a href="#one" class="more scrolly">Menu</a>
+        </section>
+
+         @*Main*@ 
+        <section id="one">
+            <div class="box alt front">
+                <div class="row front">
+                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\acaibowl.jpg" alt="" /></span><br /><a>Breakfast</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\ribeyesteak.jpg" alt="" /></span><br/><a>Dinner</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="~/Images/assets/kidsmeal.jpg" alt="" /></span><br /><a>Kids Menu</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="~/Images/assets/GarlcShrimp01.jpg" alt="" /></span><br /><a>Pupus</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\beverage.jpg" alt="" /></span><br /><a>Dessert</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\dessert.jpg" alt="" /></span><br /><a>Beverage</a></div>
+                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\coffee.jpg" alt="" /></span><br /><a>Hawaiian Coffee</a></div>
+                </div>
+            </div>
+        </section>
+
+         @*CTA*@ 
+        <section id="cta" class="wrapper style4">
+            <div class="inner">
+                <header>
+                    <h2>Let us know your experience at Aloha Table</h2>
+                    <p>To maintain our hospitality and services at our locations, we would like to get feedbacks from our customers.</p>
+                </header>
+                <ul class="actions stacked">
+                    <li><a href="#" class="button fit primary">Start Survey</a></li>
+                    <li><a href="#" class="button fit">Learn More</a></li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.scrollex.min.js"></script>
+    <script src="~/Scripts/jquery.scrolly.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/breakpoints.min.js"></script>
+    <script src="~/Scripts/browser.min.js"></script>
+    <script src="~/Scripts/util.js"></script>
+    <script src="~/Scripts/Main.js"></script>
+</body>
+

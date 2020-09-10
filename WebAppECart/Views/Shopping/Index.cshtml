@@ -1,0 +1,184 @@
+﻿@model IEnumerable<WebAppECart.ViewModel.ShoppingViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    //Main
+    $(document).ready(function () {
+        $("input[type=number]").change(function () {
+            CalculateBalance();
+        })
+        $("#btnClose").click(function () {
+            ModalWindowCloseClicked();
+        })
+
+    });
+
+    function DisplaySelectedItem(item) {
+
+        var ItemName = $(item).attr("itemname");
+        var UnitPrice = $(item).attr("itemPrice");
+        var Quantity = $("#txtQuantity").val();
+        var Total = UnitPrice * Quantity;
+
+        $("#txtItemName").val(ItemName);
+        $("#txtUnitPrice").val(UnitPrice);
+        $("#txtTotal").val(parseFloat(Total).toFixed(2));
+        $("#btnAddToCart").click(function () {
+            AddToCart(item);
+        })
+
+    }
+
+    //link the itemId and quantity into Shopping Contorller Json method "Index"
+    function AddToCart(item) {
+
+        var itemId = $(item).attr("itemid");
+        var itemQuantity = $("#txtQuantity").val();
+
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+        formData.append("Qty", itemQuantity);
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Shopping/Index',
+            success: function (data) {
+                if (data.Success) {
+                    location.reload();
+                    //$("#cartItem").text("Cart(" + $('#totalQuantity').val() + ")");
+                    $("#myModal").modal('hide');
+                    $("#txtQuantity").val("1");
+                }
+            },
+            error: function () {
+                alert("There is some problem.");
+            }
+        })
+    }
+
+    //Calculate Balance when quantity changed
+    function CalculateBalance() {
+        var Quantity = $("#txtQuantity").val();
+        var UnitPrice = $("#txtUnitPrice").val();
+        var Total = UnitPrice * Quantity;
+
+        $("#txtTotal").val(parseFloat(Total).toFixed(2));
+
+        if (parseFloat(Total) == 0) {
+            $("#btnAddToCart").attr('disabled', true);
+        } else {
+            $("#btnAddToCart").attr('disabled', false);
+        }
+    }
+
+    function ModalWindowCloseClicked() {
+        $("#txtQuantity").val("1");
+    }
+
+
+</script>
+
+<!-- Main -->
+<article id="main">
+    <section class="wrapper style5">
+        <div class="inner">
+            <div class="tab-wrap">
+                <input id="TAB02-01" type="radio" name="TAB02" class="tab-switch" checked="checked" /><label class="tab-label" for="TAB02-01">Lunch</label>
+                <div class="tab-content">
+                    <table class="tb-Menu" id="tblLunchMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+
+                            {
+                                <tr>
+                                    <td style="font-size:smaller"><img src="@Url.Content(item.ImagePath)" height="150" width="150">@item.ItemName</td>
+                                    <td style="text-align:left"><i>@item.Description</i></td>
+                                    <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                    @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                    <td>
+                                        <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                               itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                               id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+                <input id="TAB02-02" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-02">Dinner</label>
+                <div class="tab-content">
+                    <table id="tblGridDinner"></table>
+                </div>
+                <input id="TAB02-03" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-03">Kids</label>
+                <div class="tab-content">
+                    <table id="tblGridKids"></table>
+                </div>
+                <input id="TAB02-04" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-04">Pupus</label>
+                <div class="tab-content">
+                    <table id="tblGridPupus"></table>
+                </div>
+                <input id="TAB02-05" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-05">Dessert</label>
+                <div class="tab-content">
+                    <table id="tblGridDessert"></table>
+                </div>
+                <input id="TAB02-06" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-06">Beverage</label>
+                <div class="tab-content">
+                    <table id="tblGridBeverage"></table>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div style="text-align:left; margin-top:300px;" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Order Detail<span class="close" data-dismiss="modal" id="btnClose">&times;</span></h5>
+                        </div>
+                        <div class="modal-body" id="mdlBody">
+                            <table class="a" id="tblRestaurantItemList">
+                                <thead>
+                                    <tr style="font-size:small">
+                                        <th hidden style="text-align:center">Item Id</th>
+                                        <th style="text-align:center; width:40%">Item Name</th>
+                                        <th style="text-align:center; width:15%">Unit Price</th>
+                                        <th style="text-align:center; width:10%">Quantity</th>
+                                        <th style="text-align:center; width:15%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input style="font-size:medium;background-color:transparent;height:auto" type="text" id="txtItemName" readonly="readonly" /></td>
+                                        <td><input style="text-align:right;background-color:transparent" type="text" id="txtUnitPrice" readonly="readonly" value="0.00" /></td>
+                                        <td><input style="text-align:right;background-color:transparent;width:100%" type="number" min="0" step="1" id="txtQuantity" value="1" /></td>
+                                        <td><input style="text-align:right;background-color:transparent" type="text" id="txtTotal" readonly="readonly" value="0.00" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="button" data-dismiss="modal" id="btnClose">Close</button>
+                            <button type="button" class="button primary" id="btnAddToCart">Add To Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>

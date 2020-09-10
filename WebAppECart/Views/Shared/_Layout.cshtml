@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ALOHA TABLE | HOME</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />*@
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Style/StyleSheet.css" rel="stylesheet" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="landing is-preload">
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Header -->
+        <header id="header">
+            <h1>ALOHA TABLE</h1>
+            <nav id="nav">
+                <ul>
+                    <li class="special">
+                        @Html.ActionLink("Home", "Index", "Home")
+                        @Html.ActionLink("Order", "Index", "Shopping")
+                        @Html.ActionLink("About", "About", "Home")
+                        @Html.ActionLink("Location & Contact", "Contact", "Home")
+                        @Html.Partial("_ShoppingCart")
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </header>
+        <!-- Main -->
+        @*<div class="container body-content">*@
+        @RenderBody()
+        @*</div>*@
+        <!-- Footer -->
+        <footer id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <p>&copy; @DateTime.Now.Year - ALOHA TABLE.ASP.NET</p>
+        </footer>
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.scrollex.min.js"></script>
+    <script src="~/Scripts/jquery.scrolly.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/breakpoints.min.js"></script>
+    <script src="~/Scripts/browser.min.js"></script>
+    <script src="~/Scripts/util.js"></script>
+    <script src="~/Scripts/Main.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
