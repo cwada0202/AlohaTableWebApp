@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Index";
 }
+<!-- Order Page -->
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
@@ -13,9 +14,14 @@
         $("#btnClose").click(function () {
             ModalWindowCloseClicked();
         })
-
+        //$('.tab-switch').click(function () {
+        //    TabSwichAction(this.id);
+        //})
     });
 
+
+
+    //display selected item in modal window
     function DisplaySelectedItem(item) {
 
         var ItemName = $(item).attr("itemname");
@@ -87,10 +93,10 @@
 
 <!-- Main -->
 <article id="main">
-    <section class="wrapper style5">
+    <section class="wrapper style6">
         <div class="inner">
             <div class="tab-wrap">
-                <input id="TAB02-01" type="radio" name="TAB02" class="tab-switch" checked="checked" /><label class="tab-label" for="TAB02-01">Lunch</label>
+                <input id="TAB02-01" type="radio" name="menuTab" class="tab-switch" checked="checked" /><label class="tab-label" for="TAB02-01">Lunch</label>
                 <div class="tab-content">
                     <table class="tb-Menu" id="tblLunchMenuList">
                         <thead>
@@ -103,82 +109,239 @@
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
-
                             {
-                                <tr>
-                                    <td style="font-size:smaller"><img src="@Url.Content(item.ImagePath)" height="150" width="150">@item.ItemName</td>
-                                    <td style="text-align:left"><i>@item.Description</i></td>
-                                    <td>@item.ItemPrice.ToString("$#,##0.00")</td>
-                                    @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
-                                    <td>
-                                        <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
-                                               itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
-                                               id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
-                                    </td>
+                                if (item.Category == "Lunch")
+                                {
+                                    <tr>
+                                        <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)"></td>
+                                        <td style="text-align:left"><i>@item.Description</i></td>
+                                        <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                        @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                        <td>
+                                            <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                                    itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                                   id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                        </td>
 
-                                </tr>
+                                    </tr>
+                                }
+
                             }
                         </tbody>
                     </table>
 
                 </div>
-                <input id="TAB02-02" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-02">Dinner</label>
+
+
+                <input id="TAB02-02" type="radio" name="menuTab" class="tab-switch" /><label class="tab-label" for="TAB02-02">Dinner</label>
                 <div class="tab-content">
-                    <table id="tblGridDinner"></table>
-                </div>
-                <input id="TAB02-03" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-03">Kids</label>
-                <div class="tab-content">
-                    <table id="tblGridKids"></table>
-                </div>
-                <input id="TAB02-04" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-04">Pupus</label>
-                <div class="tab-content">
-                    <table id="tblGridPupus"></table>
-                </div>
-                <input id="TAB02-05" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-05">Dessert</label>
-                <div class="tab-content">
-                    <table id="tblGridDessert"></table>
-                </div>
-                <input id="TAB02-06" type="radio" name="TAB02" class="tab-switch" /><label class="tab-label" for="TAB02-06">Beverage</label>
-                <div class="tab-content">
-                    <table id="tblGridBeverage"></table>
-                </div>
-            </div>
-            <!-- Modal -->
-            <div style="text-align:left; margin-top:300px;" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Order Detail<span class="close" data-dismiss="modal" id="btnClose">&times;</span></h5>
-                        </div>
-                        <div class="modal-body" id="mdlBody">
-                            <table class="a" id="tblRestaurantItemList">
-                                <thead>
-                                    <tr style="font-size:small">
-                                        <th hidden style="text-align:center">Item Id</th>
-                                        <th style="text-align:center; width:40%">Item Name</th>
-                                        <th style="text-align:center; width:15%">Unit Price</th>
-                                        <th style="text-align:center; width:10%">Quantity</th>
-                                        <th style="text-align:center; width:15%">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                    <table id="tbldinnerMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                if (item.Category == "Dinner"||item.Category == "Lunch")
+                                {
                                     <tr>
-                                        <td><input style="font-size:medium;background-color:transparent;height:auto" type="text" id="txtItemName" readonly="readonly" /></td>
-                                        <td><input style="text-align:right;background-color:transparent" type="text" id="txtUnitPrice" readonly="readonly" value="0.00" /></td>
-                                        <td><input style="text-align:right;background-color:transparent;width:100%" type="number" min="0" step="1" id="txtQuantity" value="1" /></td>
-                                        <td><input style="text-align:right;background-color:transparent" type="text" id="txtTotal" readonly="readonly" value="0.00" /></td>
+                                        <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)"></td>
+                                        <td style="text-align:left"><i>@item.Description</i></td>
+                                        <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                        @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                        <td>
+                                            <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                                   itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                                   id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                        </td>
+
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="button" data-dismiss="modal" id="btnClose">Close</button>
-                            <button type="button" class="button primary" id="btnAddToCart">Add To Cart</button>
-                        </div>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <input id="TAB02-03" type="radio" name="menuTab" class="tab-switch" /><label class="tab-label" for="TAB02-03">Kids</label>
+                <div class="tab-content">
+                    <table id="tblkidsMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                if (item.Category == "KidsMeal")
+                                {
+                                    <tr>
+                                        <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)"></td>
+                                        <td style="text-align:left"><i>@item.Description</i></td>
+                                        <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                        @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                        <td>
+                                            <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                                   itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                                   id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <input id="TAB02-04" type="radio" name="menuTab" class="tab-switch" /><label class="tab-label" for="TAB02-04">Pupus</label>
+                <div class="tab-content">
+                    <table id="tblpupusMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                if (item.Category == "Pupus")
+                                {
+                                    <tr>
+                                        <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)"></td>
+                                        <td style="text-align:left"><i>@item.Description</i></td>
+                                        <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                        @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                        <td>
+                                            <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                                   itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                                   id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <input id="TAB02-05" type="radio" name="menuTab" class="tab-switch" /><label class="tab-label" for="TAB02-05">Dessert</label>
+                <div class="tab-content">
+                    <table id="tbldessertMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                if (item.Category == "Dessert")
+                                {
+                                    <tr>
+                                        <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)" /></td>
+                                        <td style="text-align:left"><i>@item.Description</i></td>
+                                        <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                        @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                        <td>
+                                            <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                                   itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                                   id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <input id="TAB02-06" type="radio" name="menuTab" class="tab-switch" /><label class="tab-label" for="TAB02-06">Beverage</label>
+                <div class="tab-content">
+                    <table id="tblbeverageMenuList">
+                        <thead>
+                            <tr>
+                                <th>Menu</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                if (item.Category == "Beverage")
+                                {
+                            <tr>
+                                <td style="font-size:smaller">@item.ItemName<img src="@Url.Content(item.ImagePath)" /></td>
+                                <td style="text-align:left"><i>@item.Description</i></td>
+                                <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                                @*<td><input type="text" id="txtQuantity" value="0"/></td>*@
+                                <td>
+                                    <input type="button" style="font-size:small" name="AddToCart" value="Select" class="button primary small"
+                                           itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                           id="btnSelect" onclick="DisplaySelectedItem(this)" data-toggle="modal" data-target="#myModal" />
+                                </td>
+
+                            </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!-- Modal -->
+        <div style="text-align:left; margin-top:200px;" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color:black !important">Order Detail<span class="close" data-dismiss="modal" id="btnClose">&times;</span></h5>
+                    </div>
+                    <div class="modal-body" id="mdlBody">
+                        <table class="a" id="tblRestaurantItemList">
+                            <thead>
+                                <tr style="font-size:small">
+                                    <th hidden style="text-align:center">Item Id</th>
+                                    <th style="text-align:center; width:40%">Item Name</th>
+                                    <th style="text-align:center; width:15%">Unit Price</th>
+                                    <th style="text-align:center; width:10%">Quantity</th>
+                                    <th style="text-align:center; width:15%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input style="font-size:medium;background-color:transparent;height:auto" type="text" id="txtItemName" readonly="readonly" /></td>
+                                    <td><input style="text-align:right;background-color:transparent" type="text" id="txtUnitPrice" readonly="readonly" value="0.00" /></td>
+                                    <td><input style="text-align:right;background-color:transparent;width:100%" type="number" min="0" step="1" id="txtQuantity" value="1" /></td>
+                                    <td><input style="text-align:right;background-color:transparent" type="text" id="txtTotal" readonly="readonly" value="0.00" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button" data-dismiss="modal" id="btnClose">Close</button>
+                        <button type="button" class="button primary" id="btnAddToCart">Add To Cart</button>
                     </div>
                 </div>
             </div>
         </div>
+        
     </section>
 </article>

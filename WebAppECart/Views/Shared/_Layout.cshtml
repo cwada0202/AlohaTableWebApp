@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<html>
 <head>
     <title>ALOHA TABLE | HOME</title>
     <meta charset="utf-8" />
@@ -8,32 +7,50 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Style/StyleSheet.css" rel="stylesheet" />
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <link href="~/Style/fontawesome-all.min.css" rel="stylesheet" />
 </head>
 <body class="landing is-preload">
     <!-- Page Wrapper -->
     <div id="page-wrapper">
         <!-- Header -->
         <header id="header">
+            <h6 style="margin:0 0 0 0">Hawaiian restaurant</h6>
             <h1>ALOHA TABLE</h1>
-            <nav id="nav">
+            <nav id="nav" style="position:relative; text-align:center">
                 <ul>
-                    <li class="special">
+                    <li>
                         @Html.ActionLink("Home", "Index", "Home")
                         @Html.ActionLink("Order", "Index", "Shopping")
                         @Html.ActionLink("About", "About", "Home")
                         @Html.ActionLink("Location & Contact", "Contact", "Home")
                         @Html.Partial("_ShoppingCart")
+                        <b style="color:red">***This is a fake restaurant***</b>
                     </li>
-
                 </ul>
-
             </nav>
 
+            <nav style="text-align:right; right:10px">
+                <ul>
+                    <li><i class="fas fa-sign-in-alt"></i>@Html.ActionLink("Login", "Index", "Account")</li>
+                    <li class="special">
+                        <a href="#menu" class="menuToggle"><i class="fas fa-bars"></i></a>
+                        <div id="menu">
+                            <ul>
+                                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                <li>@Html.ActionLink("Order", "Index", "Shopping")</li>
+                                <li>@Html.ActionLink("Order", "Index", "Shopping")</li>
+                                <li>@Html.ActionLink("About", "About", "Home")</li>
+                                <li>@Html.ActionLink("Location & Contact", "Contact", "Home")</li>
+                                <li>@Html.Partial("_ShoppingCart")</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
         </header>
         <!-- Main -->
-        @*<div class="container body-content">*@
         @RenderBody()
-        @*</div>*@
+
         <!-- Footer -->
         <footer id="footer">
             <ul class="icons">

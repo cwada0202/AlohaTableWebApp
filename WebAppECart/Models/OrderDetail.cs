@@ -20,5 +20,7 @@ namespace WebAppECart.Models
         public decimal quantity { get; set; }
         public decimal unitPrice { get; set; }
         public decimal total { get; set; }
+    
+        public virtual Order Order { get; set; }
     }
 }

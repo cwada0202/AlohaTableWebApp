@@ -2,64 +2,114 @@
 @{
     ViewBag.Title = "Index";
 }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#lunch').click(function () {
+                $('#TAB02-01 a[href="#Shopping"]').tab('show');
+            });
+        });
+        //jump to the tab you clicked
+
+
+</script>
+<!-- HOME Page -->
 
 <body class="landing is-preload">
-     @*Page Wrapper*@ 
+    @*Page Wrapper*@
     <div id="page-wrapper">
-         @*Banner*@ 
-        <section id="banner">
-            <div class="inner">
-                <h2>Aloha Table</h2>
-                <p>
-                    Enjoy our authentic<br />
-                    Hawaiian foods and seafoods<br />
-                    ●●●
-                </p>
+        <div class="inner">
+            @*Banner*@
+            <section id="banner">
+                <div class="inner">
+                    <h2 style="font-size:xx-large; font-family:'Kaushan Script',sans-serif,cursive">Aloha Table</h2>
+                    <p>
+                        Welcome to my dummy website.<br />
+                        I created this website for broadening my experiences and <br />
+                        deepening my knowledge in development. <br />
+                        ●●●
+                    </p>
 
-                <ul class="actions special">
-                    <input type="button" class="button primary" value="ORDER ONLINE" onclick="@("window.location.href='" + @Url.Action("Index", "Shopping") + "'");" />
-                </ul>
-            </div>
-            <a href="#one" class="more scrolly">Menu</a>
-        </section>
-
-         @*Main*@ 
-        <section id="one">
-            <div class="box alt front">
-                <div class="row front">
-                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\acaibowl.jpg" alt="" /></span><br /><a>Breakfast</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\ribeyesteak.jpg" alt="" /></span><br/><a>Dinner</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="~/Images/assets/kidsmeal.jpg" alt="" /></span><br /><a>Kids Menu</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="~/Images/assets/GarlcShrimp01.jpg" alt="" /></span><br /><a>Pupus</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\beverage.jpg" alt="" /></span><br /><a>Dessert</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\dessert.jpg" alt="" /></span><br /><a>Beverage</a></div>
-                    <div class="col-4 alt"><span class="image front"><img src="Images\assets\coffee.jpg" alt="" /></span><br /><a>Hawaiian Coffee</a></div>
+                    <ul class="actions special">
+                        <li type="button" class="button primary" value="ORDER ONLINE" onclick="@("window.location.href='" + @Url.Action("Index", "Shopping") + "'");" />
+                    </ul>
                 </div>
-            </div>
+                <a href="#objMenu" class="more scrolly"><b style="font-size:xx-large; font-family:'Kaushan Script', sans-serif,cursive">MENU</b></a>
+            </section>
+
+            @*Main*@
+
+        <section id="objMenu" class="tiles">
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/acaibowl.jpg" alt="" />
+                </span>
+                <a id="lunch">
+                    <h2>Lunch</h2>
+                    <div class="content">
+                        <p>Try hawaiian breakfast for your lunch!</p>
+                    </div>
+                </a>
+            </article>
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/ribeyesteak.jpg" alt="" />
+                </span>
+                <a onclick="location.href='@Url.Action("Index","Shopping", new { id= "TAB02-02"})'">
+                    <h2>Dinner</h2>
+                    <div class="content">
+                        <p>Dinner will be served with 2 sides of your choice.</p>
+                    </div>
+                </a>
+            </article>
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/kidsmeal.jpg" alt="" />
+                </span>
+                <a onclick="location.href='@Url.Action("Index","Shopping", new { id= "TAB02-03"})'">
+                    <h2>Kids Meal</h2>
+                    <div class="content">
+                        <p>Kids meal will be served with 1 side of your choice and one drink and one desert.</p>
+                    </div>
+                </a>
+            </article>
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/GarlcShrimp01.jpg" alt="" />
+                </span>
+                <a onclick="location.href='@Url.Action("Index","Shopping", new { id= "TAB02-04"})'">
+                    <h2>Pupus</h2>
+                    <div class="content">
+                        <p>"Pupu" is a Hawaiian term for any apperizer, snack or finger food. </p>
+                    </div>
+                </a>
+            </article>
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/dessert.jpg" alt="" />
+                </span>
+                <a onclick="location.href='@Url.Action("Index","Shopping", new { id= "TAB02-05"})'">
+                    <h2>Dessert</h2>
+                    <div class="content">
+                        <p>Try our homemade coconut cake!</p>
+                    </div>
+                </a>
+            </article>
+            <article>
+                <span class="image fit center">
+                    <img src="~/Images/assets/coffee.jpg" alt="" />
+                </span>
+                <a onclick="location.href='@Url.Action("Index","Shopping", new { id= "TAB02-06"})'">
+                    <h2>Beverage</h2>
+                    <div class="content">
+                        <p>Want some Hawaiian coffee?</p>
+                    </div>
+                </a>
+            </article>
+
         </section>
 
-         @*CTA*@ 
-        <section id="cta" class="wrapper style4">
-            <div class="inner">
-                <header>
-                    <h2>Let us know your experience at Aloha Table</h2>
-                    <p>To maintain our hospitality and services at our locations, we would like to get feedbacks from our customers.</p>
-                </header>
-                <ul class="actions stacked">
-                    <li><a href="#" class="button fit primary">Start Survey</a></li>
-                    <li><a href="#" class="button fit">Learn More</a></li>
-                </ul>
-            </div>
-        </section>
+        </div>
 
     </div>
-    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-    <script src="~/Scripts/jquery.scrollex.min.js"></script>
-    <script src="~/Scripts/jquery.scrolly.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/breakpoints.min.js"></script>
-    <script src="~/Scripts/browser.min.js"></script>
-    <script src="~/Scripts/util.js"></script>
-    <script src="~/Scripts/Main.js"></script>
 </body>
 

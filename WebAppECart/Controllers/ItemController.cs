@@ -1,10 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Web;
 using System.Web.Mvc;
 using WebAppECart.Models;
 using WebAppECart.ViewModel;
@@ -13,10 +11,13 @@ namespace WebAppECart.Controllers
 {
     public class ItemController : Controller
     {
-        private ECartDBEntities objECartDbEntities;
+        private AlohaTableRestaurantDBEntities objECartDbEntities;
+        private List<ItemViewModel> ListOfItemViewModel;
+
         public ItemController()
         {
-            objECartDbEntities = new ECartDBEntities();
+            objECartDbEntities = new AlohaTableRestaurantDBEntities();
+            ListOfItemViewModel = new List<ItemViewModel>();
         }
         // GET: Item
         public ActionResult Index()
@@ -51,6 +52,55 @@ namespace WebAppECart.Controllers
 
             return Json(new { Success = true, Message = "Item is added Successfully." }, JsonRequestBehavior.AllowGet);
             //return Json("HHHH", JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ItemList()
+        {
+            IEnumerable<ItemListModel> ListOfItemViewModel = (from objItem in objECartDbEntities.Items
+                                                              join objCategory in objECartDbEntities.Categories
+                                                              on objItem.categoryId equals objCategory.categoryId
+                                                              select new ItemListModel()
+                                                              {
+                                                                  
+                                                                  ItemId = objItem.itemId,
+                                                                  ImagePath = objItem.imagePath,
+                                                                  ItemName = objItem.itemName,
+                                                                  ItemCode = objItem.itemCode,
+                                                                  ItemPrice = objItem.itemPrice,
+                                                                  Description = objItem.description,
+                                                                  ItemCategory = objCategory.categoryName
+                                                              }
+                                                                       ).ToList();
+
+
+            return View(ListOfItemViewModel);
+
+
+        }
+        public ActionResult ItemSort(string sortOrder)
+        {
+            // sort by name||category descending order 
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name_Desc" : "";
+            ViewBag.CateSortParm = sortOrder == "Category" ? "Category" : "Category_Desc";
+            var Items = from serchItem in objECartDbEntities.Items
+                        join serchCate in objECartDbEntities.Categories
+                        on serchItem.categoryId equals serchCate.categoryId
+                        select serchItem;
+            switch (sortOrder)
+            {
+                case "Name_Desc":
+                    Items = Items.OrderByDescending(serchItem => serchItem.itemName );
+                    break;
+                case "Category":
+                    Items = Items.OrderBy(serchItem => serchItem.categoryId);
+                    break;
+                case "Category_Desc":
+                    Items = Items.OrderByDescending(serchItem => serchItem.categoryId);
+                    break;
+                default:
+                    Items = Items.OrderBy(serchItem => serchItem.itemName);
+                    break;
+            }
+            return View(Items.ToList());
         }
     }
 }

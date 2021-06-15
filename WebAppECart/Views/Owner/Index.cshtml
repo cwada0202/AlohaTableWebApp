@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    if (Session["UserId"] == null)
+    {
+        Response.Redirect("~/Account/Index");
+    }
+}
+<head>
+    <title>Aloha Table | Owner Page</title>
+</head>
+<style>
+    #header, #footer {
+        display: none;
+    }
+</style>
+<!--Owner action select page-->
+<article id="main">
+    <section class="wrapper style2" style="padding-top:3em">
+        <div class="inner" style="width:80%">
+            @*<h3 style=" text-align: right">UserName :@Session["UserName"].ToString()</h3>*@
+            <span></span>
+            <a style="float:right" href="@Url.Action("LogOut","Account")" class="button primary"><i class="fas fa-sign-out-alt"></i>Log Out</a>
+
+        </div>
+    </section>
+    <section class="wrapper style2" style="padding-top:3em; padding-bottom:10em">
+        <div class="inner" style="width:80%">
+
+            <ul class="actions">
+                <li style="margin-left:10px">
+                    @Html.ActionLink("Add Item", "Index", "Item", null, new { @class = "button fit large-owner" })
+                </li>
+                <li style="margin-left:10px">
+                    <input type="submit" value="Delete Item" class="button fit large-owner">
+                </li>
+                <li style="margin-left:10px">
+                    <input type="submit" value="Edit Item" class="button fit large-owner">
+                </li>
+            </ul>
+            <p>
+                &nbsp;
+            </p>
+            <p>
+                &nbsp;
+            </p>
+            <p>
+                <ul class="actions">
+                    <li style="margin-left:200px">
+                        <input type="submit" value="Order Record" class="button fit large-owner">
+                    </li>
+                    <li style="margin-left:10px">
+                        <input type="submit" value="NOT IN USE" class="button fit large-owner">
+                    </li>
+                </ul>
+
+
+
+        </div>
+    </section>
+</article>

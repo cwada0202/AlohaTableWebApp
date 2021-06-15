@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using WebAppECart.Models;
@@ -12,11 +10,11 @@ namespace WebAppECart.Controllers
 {
     public class ShoppingController : Controller
     {
-        private ECartDBEntities objECartDbEntities;
+        private AlohaTableRestaurantDBEntities objECartDbEntities;
         private List<ShoppingCartModel> listOfShoppingCartModels;
         public ShoppingController()
         {
-            objECartDbEntities = new ECartDBEntities();
+            objECartDbEntities = new AlohaTableRestaurantDBEntities();
             listOfShoppingCartModels = new List<ShoppingCartModel>();
         }
         // GET: Shopping
@@ -25,6 +23,7 @@ namespace WebAppECart.Controllers
             IEnumerable<ShoppingViewModel> listOfShoppingViewModels = (from objItem in objECartDbEntities.Items
                                                                        join objCart in objECartDbEntities.Categories
                                                                        on objItem.categoryId equals objCart.categoryId
+                                                                       //where objItem.categoryId == 1
                                                                        select new ShoppingViewModel()
                                                                        {
                                                                            ImagePath = objItem.imagePath,
@@ -36,6 +35,7 @@ namespace WebAppECart.Controllers
                                                                            ItemCode = objItem.itemCode
                                                                        }
                                                                        ).ToList();
+
             return View(listOfShoppingViewModels);
         }
         [HttpPost]
@@ -99,32 +99,43 @@ namespace WebAppECart.Controllers
         // Record in SQL Database
         public ActionResult AddOrder()
         {
+            // Order Table
             int OrderId = 0;
             listOfShoppingCartModels = Session["CartItem"] as List<ShoppingCartModel>;
             Order orderObj = new Order()
             {
-                orderDate = DateTime.Now,
-                orderNumber = String.Format("{0:ddmmyyyyHHmmsss}", DateTime.Now)
+                //orderId=OrderId+1,
+                OrderDate = DateTime.Now,
+                OrderNumber = String.Format("{0:ddmmyyyyHHmmsss}", DateTime.Now)
             };
             objECartDbEntities.Orders.Add(orderObj);
             objECartDbEntities.SaveChanges();
             OrderId = orderObj.orderId;
 
-            foreach (var item in listOfShoppingCartModels)
+            // OrderDetail Table
+            foreach (var Item in listOfShoppingCartModels)
             {
                 OrderDetail objOrderDetail = new OrderDetail();
-                objOrderDetail.total = item.Total;
-                objOrderDetail.itemId = item.ItemId;
-                objOrderDetail.quantity = item.Quantity;
-                objOrderDetail.unitPrice = item.UnitPrice;
+                objOrderDetail.orderId = OrderId;
+                objOrderDetail.itemId = Item.ItemId;
+                objOrderDetail.quantity = Item.Quantity;
+                objOrderDetail.unitPrice = Item.UnitPrice;
+                objOrderDetail.total = Item.Total;
 
                 objECartDbEntities.OrderDetails.Add(objOrderDetail);
                 objECartDbEntities.SaveChanges();
             }
 
+            // Clear the shopping cart
             Session["CartItem"] = null;
             Session["CartCounter"] = null;
-            return RedirectToAction("Index");
+
+            //Order placement flag indicator
+            Session["OrderComplete"] = true;
+
+            // Back to the shopping cart view
+            return RedirectToAction("ShoppingCart");
+
         }
         [HttpPost]
         public JsonResult RemoveFromCart(string ItemId)
@@ -132,7 +143,7 @@ namespace WebAppECart.Controllers
             listOfShoppingCartModels = Session["CartItem"] as List<ShoppingCartModel>;
             foreach (var item in listOfShoppingCartModels)
             {
-                if(item.ItemId==ItemId)
+                if (item.ItemId == ItemId)
                 {
                     listOfShoppingCartModels.Remove(item);
                     break;
