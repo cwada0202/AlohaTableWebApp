@@ -17,27 +17,30 @@ namespace WebAppECart.Controllers
         {
             using (AlohaTableRestaurantDBEntities db = new AlohaTableRestaurantDBEntities())
             {
-                var userDetails = db.logins.Where(x => x.userName == userAccount.UserName && x.userPassword == userAccount.UserPassword).FirstOrDefault();
+                var userDetails = db.logins
+                    .Where(x => x.userName == userAccount.UserName && x.userPassword == userAccount.UserPassword)
+                    .FirstOrDefault();
+
                 if (userDetails == null)
                 {
                     userAccount.LoginErrorMessage = "Wrong user name or password.";
                     return View("Index", userAccount);
                 }
-                else
-                {
-                    Session["UserId"] = userAccount.UserId;
-                    Session["UserName"] = userAccount.UserName;
-                    return RedirectToAction("Index", "Owner", new { });
-                }
+
+                Session["UserId"] = userDetails.userId;
+                Session["UserName"] = userDetails.userName;
+                return RedirectToAction("Index", "Owner");
             }
         }
 
         public ActionResult LogOut()
         {
-            int userId = (int)Session["UserId"];
-            Session.Abandon();
-            return RedirectToAction("Index", "Home", new { });
+            if (Session != null && Session["UserId"] != null)
+            {
+                Session.Abandon();
+            }
 
+            return RedirectToAction("Index", "Home");
         }
 
     }

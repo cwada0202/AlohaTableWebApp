@@ -1,0 +1,60 @@
+@model IEnumerable<WebAppECartCore.Models.ShoppingCartModel>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    decimal totalAmount = 0m;
+}
+
+<div class="container my-4">
+    @if (Context.Session.GetString("CartCounter") == null && Context.Session.GetString("OrderComplete") == null)
+    {
+        <h3 class="text-center">Oops! Looks like your cart is empty.</h3>
+    }
+    else if (Context.Session.GetString("OrderComplete") != null)
+    {
+        <h3 class="text-center">Thank you.</h3>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="6" class="text-center"><h3>Order Summary</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    totalAmount += item.Total;
+                    <tr>
+                        <td><img src="@Url.Content(item.ImagePath)" height="50" width="50" /></td>
+                        <td>@item.ItemName</td>
+                        <td>@item.Quantity.ToString("#,##0")</td>
+                        <td>@item.UnitPrice.ToString("#,##0.00")</td>
+                        <td>@item.Total.ToString("#,##0.00")</td>
+                        <td>
+                            <form asp-controller="Shopping" asp-action="RemoveFromCart" method="post">
+                                <input type="hidden" name="ItemId" value="@item.ItemId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-right"><h3>Total Amount</h3></td>
+                    <td><h3>@totalAmount.ToString("#,##0.00")</h3></td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-right">
+                        <form asp-controller="Shopping" asp-action="AddOrder" method="post">
+                            <button type="submit" class="btn btn-primary">Place an Order</button>
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+
+    <h4 class="text-center"><a asp-controller="Shopping" asp-action="Index">Back to Menu</a></h4>
+</div>
