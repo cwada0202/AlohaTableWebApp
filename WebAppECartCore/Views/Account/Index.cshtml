@@ -5,49 +5,146 @@
 
 <style>
     .field-validation-error {
-        color: red !important;
+        color: #ff9d9d !important;
+    }
+
+    .login-panel {
+        background: rgba(20, 20, 30, 0.82);
+        border: 1px solid rgba(248, 216, 167, 0.25);
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+        padding: 2rem 1.5rem;
+        max-width: 540px;
+        margin: 0 auto;
+    }
+
+    .login-panel h2 {
+        color: #f8d8a7;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .login-panel .form-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-panel .form-label {
+        width: 120px;
+        color: #f8f4ef;
+        font-weight: 600;
+        margin: 0;
+        text-align: right;
+    }
+
+    .login-panel .form-field {
+        flex: 1;
+    }
+
+    .login-panel input[type="text"],
+    .login-panel input[type="password"] {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(248, 216, 167, 0.45);
+        color: #ffffff;
+        padding: 0.7rem 0.9rem;
+    }
+
+    .login-panel input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .login-panel input:focus {
+        outline: none;
+        border-color: #f8d8a7;
+        box-shadow: 0 0 0 0.2rem rgba(248, 216, 167, 0.15);
+    }
+
+    .login-panel .error-block {
+        display: block;
+        margin-top: 0.35rem;
+        color: #ff9d9d;
+        font-size: 0.9rem;
+    }
+
+    .login-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+    }
+
+    .login-actions .btn {
+        min-width: 110px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .login-actions .btn-default {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .login-actions .btn-default:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    @@media (max-width: 640px) {
+        .login-panel {
+            padding: 1.3rem 1rem;
+        }
+
+        .login-panel .form-row {
+            display: block;
+        }
+
+        .login-panel .form-label {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.35rem;
+        }
     }
 </style>
 
 <article id="main">
     <section class="wrapper style4" style="padding-top:10em; padding-bottom:10em">
-        <div class="login-inner">
+        <div class="login-panel">
+            <h2>Owner Login</h2>
             <form asp-action="Authorization" asp-controller="Account" method="post">
-                <table class="table-wrapper-login">
-                    <tbody>
-                        <tr style="background-color: whitesmoke">
-                            <td style="width:40%; text-align:center">
-                                <label asp-for="UserName" style="margin:0 0 0 0"></label>
-                            </td>
-                            <td>
-                                <input asp-for="UserName" />
-                                <span asp-validation-for="UserName" class="field-validation-error"></span>
-                            </td>
-                        </tr>
-                        <tr style="background-color:whitesmoke">
-                            <td style="width:40%; text-align:center">
-                                <label asp-for="UserPassword" style="margin:0 0 0 0"></label>
-                            </td>
-                            <td>
-                                <input asp-for="UserPassword" type="password" />
-                                <span asp-validation-for="UserPassword" class="field-validation-error"></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="background-color:whitesmoke">
-                                <label class="field-validation-error">@Html.DisplayFor(model => model.LoginErrorMessage)</label>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2" style="text-align:right">
-                                <input type="submit" value="Login" class="btn btn-primary" id="btnLogin" />
-                                <input type="reset" value="Clear" class="btn btn-default" id="btnClear" style="background-color:pink" />
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="form-row">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <div class="form-field">
+                        <input asp-for="UserName" />
+                        <span asp-validation-for="UserName" class="field-validation-error error-block"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="UserPassword" class="form-label"></label>
+                    <div class="form-field">
+                        <input asp-for="UserPassword" type="password" />
+                        <span asp-validation-for="UserPassword" class="field-validation-error error-block"></span>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-bottom:0; display:block;">
+                    <div class="form-field" style="width:100%;">
+                        <label class="field-validation-error error-block">@Html.DisplayFor(model => model.LoginErrorMessage)</label>
+                    </div>
+                </div>
+
+                <div class="login-actions">
+                    <input type="reset" value="Clear" class="btn btn-default" id="btnClear" />
+                    <input type="submit" value="Login" class="btn btn-primary" id="btnLogin" />
+                </div>
             </form>
         </div>
     </section>

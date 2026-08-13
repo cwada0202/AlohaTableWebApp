@@ -80,49 +80,6 @@ public class ItemController : Controller
         return Json(new { Success = true, Message = "Item is added successfully." });
     }
 
-    public async Task<IActionResult> ItemList(string sortOrder = "")
-    {
-        if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
-        {
-            return RedirectToAction("Index", "Account");
-        }
-
-        ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "Name_Desc" : "";
-        ViewBag.CateSortParm = sortOrder == "Category" ? "Category_Desc" : "Category";
-
-        var items = from item in _db.Items
-                    join category in _db.Categories on item.CategoryId equals category.CategoryId
-                    select new ItemListModel
-                    {
-                        ItemId = item.ItemId,
-                        ImagePath = item.ImagePath,
-                        ItemName = item.ItemName,
-                        ItemCode = item.ItemCode,
-                        ItemPrice = item.ItemPrice,
-                        Description = item.Description,
-                        ItemCategory = category.CategoryName
-                    };
-
-        switch (sortOrder)
-        {
-            case "Name_Desc":
-                items = items.OrderByDescending(x => x.ItemName);
-                break;
-            case "Category":
-                items = items.OrderBy(x => x.ItemCategory);
-                break;
-            case "Category_Desc":
-                items = items.OrderByDescending(x => x.ItemCategory);
-                break;
-            default:
-                items = items.OrderBy(x => x.ItemName);
-                break;
-        }
-
-        var model = await items.ToListAsync();
-        return View(model);
-    }
-
     public async Task<IActionResult> Edit(Guid id)
     {
         if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
@@ -197,7 +154,7 @@ public class ItemController : Controller
         }
 
         await _db.SaveChangesAsync();
-        return RedirectToAction(nameof(ItemList));
+        return RedirectToAction("Index", "Owner");
     }
 
     [HttpPost]
@@ -216,6 +173,6 @@ public class ItemController : Controller
             await _db.SaveChangesAsync();
         }
 
-        return RedirectToAction(nameof(ItemList));
+        return RedirectToAction("Index", "Owner");
     }
 }

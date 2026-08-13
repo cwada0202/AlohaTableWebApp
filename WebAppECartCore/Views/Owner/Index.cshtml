@@ -1,5 +1,7 @@
+@model IEnumerable<WebAppECartCore.Models.ItemListModel>
 @{
     ViewData["Title"] = "Owner";
+    var categoryOptions = ViewBag.CategorySelectList as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
 }
 
 <div class="container py-4">
@@ -9,10 +11,261 @@
     </div>
 
     <div class="mt-4 d-flex gap-2 flex-wrap">
-        <a asp-controller="Item" asp-action="Index" class="btn btn-success">Add Item</a>
-        <a asp-controller="Item" asp-action="ItemList" class="btn btn-secondary">Item List</a>
-        <button class="btn btn-secondary" type="button">Delete Item</button>
-        <button class="btn btn-secondary" type="button">Edit Item</button>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
         <a asp-controller="Order" asp-action="Index" class="btn btn-secondary">Order Record</a>
     </div>
+
+    <div class="mt-4">
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Item Code</th>
+                    <th>Image</th>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ItemCategory</td>
+                        <td>@item.ItemCode</td>
+                        <td><img src="@item.ImagePath" style="width:100px; height:100px" /></td>
+                        <td>@item.ItemId</td>
+                        <td>@item.ItemName</td>
+                        <td>@item.ItemPrice</td>
+                        <td>@item.Description</td>
+                        <td>
+                            <a asp-controller="Item" asp-action="Edit" asp-route-id="@item.ItemId" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-controller="Item" asp-action="Delete" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.ItemId" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this item?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<style>
+    .aloha-modal .modal-content {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+    }
+
+    .aloha-modal .modal-header {
+        background: linear-gradient(135deg, #1b2a2a 0%, #0d1d1d 100%);
+        color: #ffffff;
+        border-bottom: none;
+        padding: 1rem 1.25rem;
+    }
+
+    .aloha-modal .modal-title {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .aloha-modal .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+        opacity: 0.9;
+    }
+
+    .aloha-modal .modal-body {
+        background: #f9f7f3;
+        padding: 1.5rem;
+    }
+
+    .aloha-item-form .form-label {
+        font-weight: 600;
+        color: #2a3f3f;
+        margin-bottom: 0.45rem;
+    }
+
+    .aloha-item-form .form-control,
+    .aloha-item-form .form-select {
+        border-radius: 10px;
+        border: 1px solid #d8d0c5;
+        min-height: 46px;
+        background: #fff;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    .aloha-item-form .form-control:focus,
+    .aloha-item-form .form-select:focus {
+        border-color: #8b7b61;
+        box-shadow: 0 0 0 0.2rem rgba(139, 123, 97, 0.12);
+    }
+
+    .aloha-item-form textarea.form-control {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .aloha-image-box {
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: #fff;
+        padding: 12px;
+        min-height: 270px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .aloha-image-box img {
+        width: 220px;
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        background: #f3f0ea;
+    }
+
+    .aloha-modal .modal-footer {
+        border-top: none;
+        background: #fff;
+        padding: 1rem 1.25rem 1.25rem;
+    }
+
+    .aloha-modal .modal-footer .btn {
+        min-width: 110px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="modal fade aloha-modal" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addItemModalLabel">Add Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body aloha-item-form">
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-4 text-center">
+                        <div class="aloha-image-box">
+                            <img src="/images/no-image-icon-23485.png" id="customImgTag" alt="Item preview" />
+                            <input id="ImagePath" type="file" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="ItemName" class="form-label">Item Name</label>
+                            <input id="ItemName" class="form-control" autocomplete="off" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ItemPrice" class="form-label">Item Price</label>
+                            <input id="ItemPrice" class="form-control" autocomplete="off" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ItemCode" class="form-label">Item Code</label>
+                            <input id="ItemCode" class="form-control" autocomplete="off" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="CategoryId" class="form-label">Category</label>
+                            <select id="CategoryId" class="form-select">
+                                @foreach (var category in categoryOptions)
+                                {
+                                    <option value="@category.Value">@category.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea id="Description" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnResetItem">Reset</button>
+                <button type="button" class="btn btn-primary" id="btnSaveItem">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnResetItem').on('click', ResetItem);
+            $('#btnSaveItem').on('click', SaveItem);
+            $('#ImagePath').on('change', function () { readURL(this); });
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#customImgTag').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function ResetItem() {
+            $('#CategoryId').val('1');
+            $('#ItemCode').val('');
+            $('#ItemName').val('');
+            $('#Description').val('');
+            $('#ItemPrice').val('');
+            $('#ImagePath').val('');
+            $('#customImgTag').attr('src', '/images/no-image-icon-23485.png');
+        }
+
+        function SaveItem() {
+            var formData = new FormData();
+            formData.append('categoryId', $('#CategoryId').val());
+            formData.append('itemCode', $('#ItemCode').val());
+            formData.append('itemName', $('#ItemName').val());
+            formData.append('description', $('#Description').val());
+            formData.append('itemPrice', $('#ItemPrice').val());
+
+            var fileInput = document.getElementById('ImagePath');
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                formData.append('imagePath', fileInput.files[0]);
+            }
+
+            $.ajax({
+                async: true,
+                dataType: 'json',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                url: '/Item/Index',
+                data: formData,
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        $('#addItemModal').modal('hide');
+                        ResetItem();
+                        location.reload();
+                    } else {
+                        alert(data.message || 'There is some problem to add Item.');
+                    }
+                },
+                error: function () {
+                    alert('There is some problem to add Item.');
+                }
+            });
+        }
+    </script>
+}
