@@ -1,0 +1,288 @@
+@model IEnumerable<RestaurantWebApp.Models.ShoppingViewModel>
+@{
+    ViewData["Title"] = "Order";
+}
+
+@section Scripts {
+    <script>
+        const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+
+        $(document).ready(function () {
+            $("input[type=number]").on("change", function () {
+                calculateBalance();
+            });
+
+            $("#btnAddToCart").on("click", function () {
+                var item = $("#btnAddToCart").data("item");
+                AddToCart(item);
+            });
+        });
+
+        function DisplaySelectedItem(item) {
+            var itemName = $(item).attr("itemname");
+            var unitPrice = $(item).attr("itemprice");
+            var quantity = $("#txtQuantity").val();
+            var total = Number(unitPrice) * Number(quantity);
+
+            $("#txtItemName").val(itemName);
+            $("#txtUnitPrice").val(Number(unitPrice).toFixed(2));
+            $("#txtTotal").val(Number(total).toFixed(2));
+            $("#btnAddToCart").data("item", item);
+            myModal.show();
+        }
+
+        function AddToCart(item) {
+            var itemId = $(item).attr("itemid");
+            var itemQuantity = $("#txtQuantity").val();
+
+            var formData = new FormData();
+            formData.append("ItemId", itemId);
+            formData.append("Qty", itemQuantity);
+
+            $.ajax({
+                async: true,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                url: '/Shopping/Index',
+                success: function (data) {
+                    if (data.success) {
+                        myModal.hide();
+                        $("#txtQuantity").val("1");
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    alert("There is some problem.");
+                }
+            });
+        }
+
+        function calculateBalance() {
+            var quantity = $("#txtQuantity").val();
+            var unitPrice = $("#txtUnitPrice").val();
+            var total = Number(unitPrice) * Number(quantity);
+            $("#txtTotal").val(Number(total).toFixed(2));
+        }
+    </script>
+}
+
+<div class="container my-4">
+    <div class="tab-wrap">
+        <input id="TAB02-01" type="radio" name="menuTab" class="tab-switch" checked="checked" />
+        <label class="tab-label" for="TAB02-01">Lunch</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Lunch"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input id="TAB02-02" type="radio" name="menuTab" class="tab-switch" />
+        <label class="tab-label" for="TAB02-02">Dinner</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Dinner" || x.Category == "Lunch"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input id="TAB02-03" type="radio" name="menuTab" class="tab-switch" />
+        <label class="tab-label" for="TAB02-03">Kids</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Kids Meal"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input id="TAB02-04" type="radio" name="menuTab" class="tab-switch" />
+        <label class="tab-label" for="TAB02-04">Pupus</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Pupus"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input id="TAB02-05" type="radio" name="menuTab" class="tab-switch" />
+        <label class="tab-label" for="TAB02-05">Dessert</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Dessert"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input id="TAB02-06" type="radio" name="menuTab" class="tab-switch" />
+        <label class="tab-label" for="TAB02-06">Beverage</label>
+        <div class="tab-content">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x => x.Category == "Beverage"))
+                    {
+                        <tr>
+                            <td><strong>@item.ItemName</strong><br /><img src="@Url.Content(item.ImagePath)" style="max-width:120px; height:auto;" /></td>
+                            <td>@item.Description</td>
+                            <td>@item.ItemPrice.ToString("$#,##0.00")</td>
+                            <td>
+                                <input type="button" class="btn btn-primary btn-sm" value="Select"
+                                       itemid="@item.ItemId" itemname="@item.ItemName" itemprice="@item.ItemPrice"
+                                       data-bs-toggle="modal" data-bs-target="#myModal" onclick="DisplaySelectedItem(this)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Order Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:40%">Item Name</th>
+                            <th style="width:15%">Unit Price</th>
+                            <th style="width:10%">Quantity</th>
+                            <th style="width:15%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input class="form-control" type="text" id="txtItemName" readonly="readonly" /></td>
+                            <td><input class="form-control" type="text" id="txtUnitPrice" readonly="readonly" value="0.00" /></td>
+                            <td><input class="form-control" type="number" min="0" step="1" id="txtQuantity" value="1" /></td>
+                            <td><input class="form-control" type="text" id="txtTotal" readonly="readonly" value="0.00" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnAddToCart">Add To Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
